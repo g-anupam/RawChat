@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        margin: 0;
+      }
+      #setup {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      #chat-container {
+        display: none;
+        flex: 1;
+        flex-direction: column;
+      }
+      #chat-box {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+      #input-area {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+      }
+      input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        margin-left: 10px;
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="setup">
+      <h2>Enter Destination Details</h2>
+      <input type="text" id="ip" placeholder="IP Address" />
+      <input type="text" id="port" placeholder="Port Number" />
+      <button onclick="startChat()">Connect</button>
+    </div>
+
+    <div id="chat-container">
+      <div id="chat-box"></div>
+      <div id="input-area">
+        <input type="text" id="message" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <script>
+      function startChat() {
+        const ip = document.getElementById("ip").value.trim();
+        const port = document.getElementById("port").value.trim();
+
+        if (ip !== "" && port !== "") {
+          document.getElementById("setup").style.display = "none";
+          document.getElementById("chat-container").style.display = "flex";
+        } else {
+          alert("Please enter a valid IP address and port number.");
+        }
+      }
+
+      function sendMessage() {
+        const messageBox = document.getElementById("message");
+        const chatBox = document.getElementById("chat-box");
+
+        if (messageBox.value.trim() !== "") {
+          const message = document.createElement("div");
+          message.textContent = messageBox.value;
+          chatBox.appendChild(message);
+          messageBox.value = "";
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      }
+    </script>
+  </body>
+</html>
