@@ -3,14 +3,15 @@ import threading
 import os
 
 class ChatServer:
-    def __init__(self, host='127.0.0.1', port=12345):
+    def __init__(self, host='0.0.0.0', port=12345):  # Changed to 0.0.0.0
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Avoid "Address already in use"
         self.server.bind((host, port))
         self.server.listen()
         self.clients = []
         self.nicknames = []
         self.files = {}  # Store files: {filename: content}
-        print(f"Server running on {host}:{port}")
+        print(f"Server running on {host}:{port} (listening on all interfaces)")
 
     def broadcast(self, message, exclude=None):
         for client in self.clients:
@@ -23,7 +24,7 @@ class ChatServer:
     def handle_client(self, client):
         while True:
             try:
-                message = client.recv(1024)
+                message = self.client.recv(1024)
                 if message.startswith(b'FILE:'):
                     self.handle_file_transfer(client, message)
                 elif message.startswith(b'DOWNLOAD:'):
