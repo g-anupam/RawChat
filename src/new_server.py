@@ -2,8 +2,20 @@
 import socket
 import threading
 
+def getIpAddress():
+    '''
+    This is a function not related to the server class. All it does is obtain the ip address of the server.
+    '''
+    s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+    try:
+        s.connect(('8.8.8.8',80))
+        ip = s.getsockname()[0]
+    finally:
+        s.close()
+    return ip
+
 class ChatServer:
-    def __init__(self,host = '0.0.0.0', port = 12345):
+    def __init__(self,host = getIpAddress(), port = 12345):
         '''
         Initialises the server.
         '''
@@ -87,12 +99,11 @@ class ChatServer:
     def run(self):
         while True:
             client, address = self.server.accept()
-            print(f"Connected with {address}") #TODO: Observe what this prints in the server log
-            client.send('NAME'.encode('utf-8'))
+            # client.send('NAME'.encode('utf-8'))
             name = client.recv(1024).decode('utf-8')
             self.names.append(name)
             self.clients.append(client)
-            print(f"{name} connected with the server")
+            print(f"{name} connected with the server through IP Address and port : {address}")
             self.broadcast(f"{name} joined the chat!\n".encode('utf-8'))
             client.send('Connected to the server!'.encode('utf-8')) #TODO: Observe this line too!
             thread = threading.Thread(target = self.handle_client, args = (client,))

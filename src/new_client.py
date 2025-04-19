@@ -10,7 +10,8 @@ class ChatClient:
         self.name = name
         self.running = True
         self.buffer_size = 500
-
+        self.client.send(self.name.encode('utf-8'))
+    
     def receive(self):
         while self.running:
             try:
